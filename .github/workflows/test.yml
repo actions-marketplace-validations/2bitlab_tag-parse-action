@@ -1,0 +1,20 @@
+name: "build-test"
+on: # rebuild any PRs and main branch changes
+  push:
+    branches:
+      - master
+      - Autumn/chore-test-action/1124
+  release:
+    types: # This configuration does not affect the page_build event above
+      - created
+jobs:
+  test: # make sure the action works on a clean machine without building
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./
+        id: hello
+        with:
+          repository: 2bitlab/vue-test-private
+          githubToken: ${{ secrets.ACCESS_TOKEN }}
+          type: stringify
