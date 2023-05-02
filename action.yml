@@ -1,24 +1,24 @@
-name: 'Tag parse'
-description: '打tag以及tag解析'
-author: 'Autumn'
+name: "Build By Tag Parse"
+description: "打tag以及tag解析"
+author: "Autumn"
 branding:
-  icon: 'git-branch'
-  color: 'green'
+  icon: "git-branch"
+  color: "green"
 inputs:
   repository:
     required: false
-    description: '给模板repository打tag，默认是当前repository'
+    description: "给模板repository打tag，默认是当前repository"
   githubToken:
     required: true
-    description: 'github仓库的访问权限token'
+    description: "github仓库的访问权限token"
   type:
     required: false
-    description: '当前的类型是parse还是stringify'
-    default: 'parse'
+    description: "当前的类型是parse还是stringify"
+    default: "parse"
   runCommond:
     required: false
-    description: '执行的命令'
-    default: 'build'
+    description: "执行的命令"
+    default: "build"
 runs:
-  using: 'node12'
-  main: 'dist/index.js'
+  using: "node12"
+  main: "dist/index.js"
