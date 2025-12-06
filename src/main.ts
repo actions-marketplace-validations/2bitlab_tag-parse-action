@@ -24,11 +24,13 @@ async function run(): Promise<void> {
     const topRepository: string = core.getInput("repository");
     const githubToken: string = core.getInput("githubToken");
     const type: string = core.getInput("type");
-    const runCommond: string = core.getInput("runCommond");
+    const runCommand: string = core.getInput("runCommand") || "";
+    const appPath: string = core.getInput("appPath") || "";
 
     console.log("topRepository:", topRepository);
     console.log("type:", type);
-    console.log("runCommond:", runCommond);
+    console.log("runCommand:", runCommand);
+    console.log("appPath:", appPath);
 
     if (type === "stringify") {
       const branch = getBranchByHead(ref) || getBranchByTag(ref);
@@ -41,20 +43,26 @@ async function run(): Promise<void> {
       const tagUrl = getTagUrl(topRepository || full_name);
       const timesTamp = formatTime(new Date(), "{yy}-{mm}-{dd}-{h}-{i}-{s}");
 
-      const tagName = `${outRepository}/${syncBranch}/${timesTamp}/${runCommond}`;
+      const tagName = `${outRepository}/${syncBranch}/${timesTamp}/${runCommand.replace(
+        /\s+/g,
+        "_"
+      )}`;
       // `release/${timesTamp}&branch=${branch}&syncBranch=${syncBranch}&repository=${outRepository}`
       const tagMessage = {
         branch,
         syncBranch,
         repository: outRepository,
         pusherName,
-        runCommond,
+        runCommand,
+        appPath,
       };
-      console.log("tagName: ", tagName);
+      console.log("tagName1111: ", tagName);
+      console.log("tagUrl", tagUrl);
+      console.log("body", JSON.stringify(tagMessage));
       const ret = await axios({
         method: "POST",
         headers: {
-          Accept: "application/vnd.github.v3+json",
+          Accept: "application/vnd.github+json",
           "content-type": "application/json",
           Authorization: `Bearer ${githubToken}`,
         },
@@ -64,7 +72,7 @@ async function run(): Promise<void> {
           body: JSON.stringify(tagMessage),
         },
       });
-      console.log("ret------: ", ret.data);
+      console.log("ret-------: ", ret.data);
     }
     if (type === "parse") {
       const { release } = pushPayload || {};
@@ -76,18 +84,19 @@ async function run(): Promise<void> {
         syncBranch: tagSyncBranch,
         repository: tagRepository,
         pusherName,
-        runCommond,
       } = tagInfo || {};
       console.log("branch: ", tagSyncBranch);
       console.log("syncBranch----", tagBranch);
       console.log("repository----", tagRepository);
       console.log("pusherName----", pusherName);
-      console.log("runCommond----", runCommond);
+      console.log("runCommand----", tagInfo.runCommand);
+      console.log("appPath----", tagInfo.appPath);
 
       core.exportVariable("BRANCH", tagBranch);
-      core.exportVariable("syncBranch", tagSyncBranch);
+      core.exportVariable("SYNC_BRANCH", tagSyncBranch);
       core.exportVariable("REPOSITORY", tagRepository);
-      core.exportVariable("runCommond", runCommond);
+      core.exportVariable("RUN_COMMAND", tagInfo.runCommand);
+      core.exportVariable("APP_PATH", tagInfo.appPath);
     }
   } catch (error) {
     const e: any = error;

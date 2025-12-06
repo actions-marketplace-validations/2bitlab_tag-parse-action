@@ -15,10 +15,14 @@ inputs:
     required: false
     description: "当前的类型是parse还是stringify"
     default: "parse"
-  runCommond:
+  runCommand:
     required: false
     description: "执行的命令"
     default: "build"
+  appPath:
+    required: false
+    description: "构建后产物存放路径"
+    default: ""
 runs:
   using: "node12"
   main: "dist/index.js"

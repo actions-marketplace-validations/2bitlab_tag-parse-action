@@ -1,4 +1,4 @@
-name: "build-test"
+name: 'build-test'
 on: # rebuild any PRs and main branch changes
   push:
     branches:
@@ -15,6 +15,6 @@ jobs:
       - uses: ./
         id: hello
         with:
-          repository: 2bitlab/vue-test-private
+          repository: 2bitlab/pnpm_action_factory
           githubToken: ${{ secrets.ACCESS_TOKEN }}
           type: stringify
